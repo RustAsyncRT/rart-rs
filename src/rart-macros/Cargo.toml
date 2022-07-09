@@ -1,6 +1,6 @@
 [package]
 name = "rart-macros"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["Matheus T. dos Santos <tenoriomatheus0@gmail.com>"]
 edition = "2021"
 repository = "https://github.com/RustAsyncRT/rart-rs"

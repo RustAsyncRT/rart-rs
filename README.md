@@ -13,4 +13,4 @@ rart-rs = "0.1"
 
 ## Disclaimer
 
-> This is not a release (still in version `v0.0.0`). Do not use in your projects;
+> This is not a release (still in version `v0.0.1`). Do not use in your projects;
