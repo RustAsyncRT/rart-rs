@@ -1,8 +1,15 @@
 [package]
 name = "rart-macros"
 version = "0.0.0"
-edition = "2021"
 authors = ["Matheus T. dos Santos <tenoriomatheus0@gmail.com>"]
+edition = "2021"
+repository = "https://github.com/RustAsyncRT/rart-rs"
+license-file = "../LICENSE"
+readme = "../README.md"
+documentation = "https://docs.rs/rart-rs"
+keywords = ["async", "embedded", "no-std"]
+categories = ["asynchronous", "embedded", "no-std"]
+description = "The macro submodule of rart-rs crate"
 
 [lib]
 proc-macro = true
