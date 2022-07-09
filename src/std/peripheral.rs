@@ -1,19 +1,27 @@
+#[cfg(all(feature = "std", feature = "peripherals"))]
 use std::collections::HashMap;
+#[cfg(all(feature = "std", feature = "peripherals"))]
 use std::lazy::Lazy;
+#[cfg(all(feature = "std", feature = "peripherals"))]
 use std::mem;
+#[cfg(all(feature = "std", feature = "peripherals"))]
 use std::sync::Mutex;
+#[cfg(feature = "peripherals")]
 use crate::{Gpio, Peripheral};
+#[cfg(feature = "peripherals")]
 use crate::peripherals::PeripheralKind;
 
+#[cfg(feature = "peripherals")]
 struct GpioState {
     port: u32,
     pin: u32,
     state: bool,
 }
 
+#[cfg(feature = "peripherals")]
 static mut GPIOS_STATE: Lazy<Mutex<HashMap<usize, GpioState>>> = Lazy::new(|| Mutex::new(HashMap::new()));
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "peripherals"))]
 pub unsafe fn peripheral_open(peripheral_kind: usize, config: *const ()) -> usize
 {
     if peripheral_kind != Gpio::peripheral_kind() {
@@ -29,7 +37,7 @@ pub unsafe fn peripheral_open(peripheral_kind: usize, config: *const ()) -> usiz
     id
 }
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "peripherals"))]
 pub unsafe fn peripheral_close(peripheral_kind: usize, id: usize)
 {
     if peripheral_kind != Gpio::peripheral_kind() {
@@ -40,7 +48,7 @@ pub unsafe fn peripheral_close(peripheral_kind: usize, id: usize)
     gpios_state.remove(&id);
 }
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "peripherals"))]
 pub unsafe fn peripheral_write(peripheral_kind: usize, id: usize, data: *const ())
 {
     if peripheral_kind != Gpio::peripheral_kind() {
@@ -58,7 +66,7 @@ pub unsafe fn peripheral_write(peripheral_kind: usize, id: usize, data: *const (
     state.state = *data;
 }
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "peripherals"))]
 pub unsafe fn peripheral_read(peripheral_kind: usize, id: usize, data: *mut ())
 {
     if peripheral_kind != Gpio::peripheral_kind() {
@@ -76,7 +84,7 @@ pub unsafe fn peripheral_read(peripheral_kind: usize, id: usize, data: *mut ())
     *data = state.state;
 }
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "std", feature = "peripherals"))]
 pub fn read_gpio(gpio: &Peripheral<bool, Gpio>) -> bool {
     let mut data = false;
     unsafe { peripheral_read(1, gpio.get_id(), &mut data as *mut bool as *mut ()) };
