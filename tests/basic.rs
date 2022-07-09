@@ -1,6 +1,6 @@
 use rart_rs::*;
 use chrono::Local;
-use rart::channel;
+use rart_macros::channel;
 
 #[derive(Debug)]
 pub enum BtnState {
@@ -52,11 +52,11 @@ async fn task2() -> TaskResult {
     Ok(())
 }
 
-#[rart::entry]
-#[rart::tasks(task1, task2)]
-#[rart::channels(btn_msgq, led_msgq)]
-// #[rart::triggers(sample_trigger)]
-// #[rart::init{
+#[rart_macros::entry]
+#[rart_macros::tasks(task1, task2)]
+#[rart_macros::channels(btn_msgq, led_msgq)]
+// #[rart_macros::triggers(sample_trigger)]
+// #[rart_macros::init{
 //     sample_mutex = Mutex::new(LedState::On);
 //     sample_semaphore = Semaphore::new(2);
 // }]
