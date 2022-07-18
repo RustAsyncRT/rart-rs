@@ -1,7 +1,6 @@
+use crate::mc_panic;
 #[cfg(not(feature = "std"))]
 use const_format::formatcp;
-#[cfg(not(feature = "std"))]
-use crate::mc_panic;
 #[cfg(not(feature = "std"))]
 use crate::no_std::panic;
 #[cfg(feature = "std")]
