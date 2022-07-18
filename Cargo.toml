@@ -1,6 +1,6 @@
 [package]
 name = "rart-rs"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Matheus T. dos Santos <tenoriomatheus0@gmail.com>"]
 edition = "2021"
 repository = "https://github.com/RustAsyncRT/rart-rs"
@@ -15,7 +15,7 @@ description = "A async runtime to use the benefits of the availables embedded OS
 
 [dependencies]
 heapless = "0.7.10"
-const_format = "0.2.23"
+const_format = "0.2.26"
 chrono = { version = "0.4.19", default_features = false }
 rart-macros = { path = "src/rart-macros", version = "0.0.1" }
 
@@ -24,3 +24,4 @@ std = ["chrono/default"]
 alloc_rtos = []
 alloc_rust = []
 peripherals = []
+

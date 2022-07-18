@@ -2,7 +2,8 @@ use crate::futures::time::DelayState;
 use crate::no_std::arc::Arc;
 use crate::common::blocking_mutex::BlockingMutex;
 use crate::common::logger::*;
-use crate::trace;
+use crate::common::result::Expect;
+use crate::{MCError, trace};
 
 pub fn timer_init() {
     // TODO Explain why this is safe
@@ -11,13 +12,15 @@ pub fn timer_init() {
     }
 }
 
-pub fn timer_new_delay(state: Arc<BlockingMutex<DelayState>>, timeout: u32) {
+pub fn timer_new_delay(state: Arc<BlockingMutex<DelayState>>, timeout: u32) -> Result<(), MCError> {
     let state_ptr = Arc::into_raw(state) as *const ();
 
     // TODO Explain why this is safe
     unsafe {
         rtos_timer_reschedule(rtos_timer_timeout, state_ptr, timeout);
     }
+
+    Ok(())
 }
 
 #[no_mangle]

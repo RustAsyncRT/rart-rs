@@ -1,10 +1,14 @@
 use core::alloc::{GlobalAlloc, Layout};
 use core::cell::UnsafeCell;
-use core::panic::PanicInfo;
-use core::ptr::{null, null_mut};
+use core::ptr::null_mut;
 use core::sync::atomic::AtomicUsize;
 use core::sync::atomic::Ordering::SeqCst;
-use crate::{log, panic, print_u32, show_addr};
+#[cfg(not(feature = "std"))]
+use crate::mc_panic;
+#[cfg(not(feature = "std"))]
+use crate::no_std::panic;
+#[cfg(not(feature = "std"))]
+use const_format::formatcp;
 
 const ARENA_SIZE: usize = 8 * 1024;
 const MAX_SUPPORTED_ALIGN: usize = 256;
@@ -60,8 +64,7 @@ unsafe impl GlobalAlloc for ArenaAlloc {
 }
 
 #[alloc_error_handler]
-fn alloc_error_handler(layout: Layout) -> ! {
-    unsafe {
-        panic!("allocation error!!!!!\n")
-    }
+fn alloc_error_handler(_layout: Layout) -> ! {
+    mc_panic!("allocation error!!!!!\n");
+    loop {}
 }

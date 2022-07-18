@@ -7,6 +7,10 @@ use crate::common::blocking_channel::BlockingSender;
 use crate::common::task::TaskId;
 use crate::{log};
 use crate::common::result::Expect;
+#[cfg(not(feature = "std"))]
+use const_format::formatcp;
+#[cfg(not(feature = "std"))]
+use crate::no_std::log_fn;
 
 pub struct RARTWaker {
     task_id: TaskId,

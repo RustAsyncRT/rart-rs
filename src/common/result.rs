@@ -1,4 +1,9 @@
+#[cfg(not(feature = "std"))]
+use const_format::formatcp;
+#[cfg(not(feature = "std"))]
 use crate::mc_panic;
+#[cfg(not(feature = "std"))]
+use crate::no_std::panic;
 #[cfg(feature = "std")]
 use std::sync::PoisonError;
 #[cfg(feature = "std")]
@@ -65,5 +70,12 @@ impl<T> From<SendError<T>> for MCError {
 impl From<RecvError> for MCError {
     fn from(_: RecvError) -> Self {
         MCError::RecvError
+    }
+}
+
+#[cfg(not(feature = "std"))]
+impl From<i32> for MCError {
+    fn from(_: i32) -> Self {
+        MCError::Generic
     }
 }

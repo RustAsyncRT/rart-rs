@@ -1,5 +1,5 @@
 use core::task::Context;
-use std::task::Poll;
+use core::task::Poll;
 use crate::common::arc::Arc;
 use crate::common::blocking_channel::BlockingChannel;
 use crate::common::task::TaskId;
@@ -8,6 +8,10 @@ use crate::common::task::Task;
 use heapless::Vec;
 use crate::common::result::MCError;
 use crate::log;
+#[cfg(not(feature = "std"))]
+use crate::no_std::log_fn;
+#[cfg(not(feature = "std"))]
+use const_format::formatcp;
 
 pub struct Executor<const N: usize> {
     tasks: [&'static Task; N],

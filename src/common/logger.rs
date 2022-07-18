@@ -1,6 +1,7 @@
+#[cfg(not(feature = "std"))]
 pub use const_format::formatcp;
 #[cfg(not(feature = "std"))]
-pub use crate::no_std::{log_fn, trace_fn};
+pub use crate::no_std::{log_fn, trace_fn, panic};
 
 #[macro_export]
 #[cfg(not(feature = "std"))]
@@ -43,10 +44,10 @@ macro_rules! trace {
 #[cfg(not(feature = "std"))]
 macro_rules! mc_panic {
     ($string:literal) => {
-        unsafe { panic(formatcp!("{}\n\0", $string).as_ptr()) }
+        unsafe { panic(formatcp!("{}\n\0", $string).as_ptr()); loop{} }
     };
     ($format:literal, $($e:expr),+) => {
-		unsafe { panic(formatcp!("{}\n\0", $format).as_ptr(), $($e),+) }
+		unsafe { panic(formatcp!("{}\n\0", $format).as_ptr(), $($e),+); loop{} }
 	};
 }
 #[macro_export]
