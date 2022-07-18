@@ -16,12 +16,12 @@ description = "A async runtime to use the benefits of the availables embedded OS
 [dependencies]
 heapless = "0.7.10"
 const_format = "0.2.26"
+panic-halt = "0.2.0"
 chrono = { version = "0.4.19", default_features = false }
-rart-macros = { path = "src/rart-macros", version = "0.0.1" }
+rart-macros = { path = "src/rart-macros", version = "0.0.2" }
 
 [features]
 std = ["chrono/default"]
 alloc_rtos = []
 alloc_rust = []
 peripherals = []
-

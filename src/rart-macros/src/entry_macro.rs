@@ -107,7 +107,6 @@ pub fn entry_codegen(mut model: Model) -> TokenStream {
 
         #[no_mangle]
         pub extern "C" fn #old_name() {
-            Gpio::init();
             timer_init();
 
             #channels

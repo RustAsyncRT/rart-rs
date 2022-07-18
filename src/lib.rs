@@ -26,6 +26,10 @@ pub use futures::trigger::Trigger;
 pub use futures::semaphore::{Semaphore, SemaphoreUnbounded};
 
 pub use common::result::{Expect, MCError};
+#[cfg(not(feature = "std"))]
+pub use no_std::log_fn;
+#[cfg(not(feature = "std"))]
+pub use const_format::formatcp;
 
 #[cfg(all(feature = "std", feature = "peripherals"))]
 pub use peripherals::{Peripheral, gpio::Gpio};
