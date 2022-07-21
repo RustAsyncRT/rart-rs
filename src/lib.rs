@@ -25,8 +25,9 @@ pub use futures::mutex::Mutex;
 pub use futures::trigger::Trigger;
 pub use futures::semaphore::{Semaphore, SemaphoreUnbounded};
 
+#[cfg(feature = "zbus")]
 pub use futures::zbus::ZbusChannel;
-#[cfg(not(feature = "std"))]
+#[cfg(all(not(feature = "std"), feature = "zbus"))]
 pub use no_std::zbus_backend::zbus_observer;
 
 pub use common::result::{Expect, RARTError};

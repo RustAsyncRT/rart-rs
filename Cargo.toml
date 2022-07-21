@@ -1,6 +1,6 @@
 [package]
 name = "rart-rs"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["Matheus T. dos Santos <tenoriomatheus0@gmail.com>"]
 edition = "2021"
 repository = "https://github.com/RustAsyncRT/rart-rs"
@@ -18,10 +18,11 @@ heapless = "0.7.10"
 const_format = "0.2.26"
 panic-halt = "0.2.0"
 chrono = { version = "0.4.19", default_features = false }
-rart-macros = { path = "src/rart-macros", version = "0.0.2" }
+rart-macros = { path = "src/rart-macros", version = "0.0.3" }
 
 [features]
 std = ["chrono/default"]
 alloc_rtos = []
 alloc_rust = []
 peripherals = []
+zbus = []
