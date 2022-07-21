@@ -1,0 +1,3 @@
+[submodule "tests/no_std/3rdparty/rart-c"]
+	path = tests/no_std/3rdparty/rart-c
+	url = git@github.com:RustAsyncRT/rart-c.git

@@ -1,0 +1,16 @@
+[package]
+name = "rart_no_std_tests"
+version = "0.1.0"
+edition = "2018"
+
+[workspace]
+
+[dependencies]
+heapless = "0.7.10"
+rart-rs = { path = "../../../", features = ["alloc_rtos"] }
+rart-macros = { path = "../../../src/rart-macros" }
+panic-halt = "0.2.0"
+
+[lib]
+name = "rart_no_std_tests_rs"
+crate-type = ["staticlib"]

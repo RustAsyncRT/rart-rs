@@ -25,9 +25,11 @@ pub use futures::mutex::Mutex;
 pub use futures::trigger::Trigger;
 pub use futures::semaphore::{Semaphore, SemaphoreUnbounded};
 
+pub use futures::zbus::{ZbusChannel, ZbusChannelIndex, zbus_observer};
+
 pub use common::result::{Expect, MCError};
 #[cfg(not(feature = "std"))]
-pub use no_std::log_fn;
+pub use no_std::{log_fn, timestamp};
 #[cfg(not(feature = "std"))]
 pub use const_format::formatcp;
 
