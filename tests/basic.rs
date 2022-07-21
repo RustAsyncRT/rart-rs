@@ -14,12 +14,12 @@ enum LedState {
     _Off,
 }
 
-rart::mutex_def!(sample_mutex, LedState);
-rart::semaphore_def!(sample_semaphore, 2);
-rart::trigger_def!(sample_trigger);
+rart_macros::mutex_def!(sample_mutex, LedState);
+rart_macros::semaphore_def!(sample_semaphore, 2);
+rart_macros::trigger_def!(sample_trigger);
 
-rart::channel_pub_def!(btn_msgq, BtnState, 10);
-rart::channel_def!(led_msgq, LedState, 5);
+rart_macros::channel_pub_def!(btn_msgq, BtnState, 10);
+rart_macros::channel_def!(led_msgq, LedState, 5);
 
 async fn task1() -> TaskResult {
     let now = Local::now().timestamp();

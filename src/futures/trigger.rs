@@ -7,7 +7,7 @@ use core::sync::atomic::{AtomicUsize, Ordering};
 use crate::common::arc::Arc;
 use crate::common::ArcMutex;
 use crate::common::blocking_mutex::BlockingMutex;
-use crate::common::result::MCError;
+use crate::common::result::RARTError;
 
 pub struct Trigger<const TN: usize> {
     wait_wakers: ArcMutex<Deque<Waker, TN>>,
@@ -26,7 +26,7 @@ impl<const TN: usize> Trigger<TN> {
         }
     }
 
-    pub fn trigger(&'static self) -> Result<(), MCError> {
+    pub fn trigger(&'static self) -> Result<(), RARTError> {
         let mut wait_wakers = self.wait_wakers.lock()?;
 
         if self.is_triggered.compare_exchange(0, wait_wakers.len(),

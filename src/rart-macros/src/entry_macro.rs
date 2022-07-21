@@ -117,7 +117,7 @@ pub fn entry_codegen(mut model: Model) -> TokenStream {
             MAIN_TASK.init(Task::new(0, #new_name()));
 
             static EXECUTOR: Lazy<Executor<#tasks_amount>> = Lazy::new();
-            let vector = heapless::Vec::from_slice(&[MAIN_TASK.data() #tasks_list]).mc_expect("Cannot create task vector from slice");
+            let vector = heapless::Vec::from_slice(&[MAIN_TASK.data() #tasks_list]).rart_expect("Cannot create task vector from slice");
             EXECUTOR.init(Executor::new(vector));
 
             let executor = EXECUTOR.data();

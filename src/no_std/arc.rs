@@ -27,7 +27,7 @@ impl<T> Arc<T> {
             data,
         });
         Arc {
-            ptr: NonNull::new(Box::into_raw(boxed)).mc_expect("The pointer is non-null"),
+            ptr: NonNull::new(Box::into_raw(boxed)).rart_expect("The pointer is non-null"),
             phantom: PhantomData,
         }
     }

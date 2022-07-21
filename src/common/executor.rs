@@ -6,8 +6,8 @@ use crate::common::task::TaskId;
 use crate::common::waker::{rart_waker_into_waker, RARTWaker};
 use crate::common::task::Task;
 use heapless::Vec;
-use crate::common::result::MCError;
-use crate::log;
+use crate::common::result::RARTError;
+use crate::safe_log;
 #[cfg(not(feature = "std"))]
 use crate::no_std::log_fn;
 #[cfg(not(feature = "std"))]
@@ -38,7 +38,7 @@ impl<const N: usize> Executor<N> {
         }
     }
 
-    pub fn run(&self) -> Result<(), MCError> {
+    pub fn run(&self) -> Result<(), RARTError> {
         {
             let guard = self.active_tasks.new_sender();
             let temp_sender = guard.lock()?;
@@ -79,8 +79,8 @@ impl<const N: usize> Executor<N> {
                             Poll::Ready(res) => {
                                 end_task += 1;
                                 match res {
-                                    Ok(_) => log!("Task end with success"),
-                                    Err(_) => log!("Task end with error"),
+                                    Ok(_) => safe_log!("Task end with success"),
+                                    Err(_) => safe_log!("Task end with error"),
                                 }
                             }
                         }

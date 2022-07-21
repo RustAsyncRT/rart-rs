@@ -21,7 +21,7 @@ impl Future for DelayFuture {
             match &mut *state {
                 DelayState::None => {
                     *state = DelayState::Waiting(cx.waker().clone());
-                    timer_new_delay(self.state.clone(), self.timeout.as_secs() as u32).mc_expect("Cannot create a new delay");
+                    timer_new_delay(self.state.clone(), self.timeout.as_secs() as u32).rart_expect("Cannot create a new delay");
                     Poll::Pending
                 }
                 DelayState::Waiting(_) => {

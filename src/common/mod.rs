@@ -14,7 +14,6 @@ pub mod blocking_channel {
 #[cfg(not(feature = "std"))]
 pub mod blocking_channel {
     pub type BlockingChannel<T> = crate::no_std::blocking_channel::BlockingChannel<T>;
-    pub type BlockingReceiver<T> = crate::no_std::blocking_channel::BlockingReceiver<T>;
     pub type BlockingSender<T> = crate::no_std::blocking_channel::BlockingSender<T>;
 }
 

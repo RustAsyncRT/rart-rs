@@ -21,7 +21,7 @@ pub struct BlockingReceiver<T: Default> {
 impl<T: Default> BlockingChannel<T> {
     pub fn new() -> Self {
         BlockingChannel {
-            ptr: NonNull::new(unsafe { rtos_msgq_new(core::mem::size_of::<T>()) }).mc_expect("The pointer is non-null"),
+            ptr: NonNull::new(unsafe { rtos_msgq_new(core::mem::size_of::<T>()) }).rart_expect("The pointer is non-null"),
             maker: PhantomData,
         }
     }
@@ -73,6 +73,7 @@ impl<T: Default> BlockingReceiver<T> {
         self.recv_inner(u32::MAX)
     }
 
+    #[allow(dead_code)]
     pub fn try_recv(&self) -> Result<T, i32> {
         self.recv_inner(0)
     }

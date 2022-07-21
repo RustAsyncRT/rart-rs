@@ -4,3 +4,5 @@ pub mod blocking_channel;
 pub mod timer;
 #[cfg(feature = "std")]
 pub mod peripheral;
+#[cfg(feature = "std")]
+pub mod zbus_backend;

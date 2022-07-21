@@ -5,12 +5,12 @@ use core::future::Future;
 use core::pin::Pin;
 use crate::common::UnsafeOption;
 use alloc::boxed::Box;
-use crate::MCError;
+use crate::RARTError;
 
 pub type TaskId = usize;
 
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output=T> + 'a>>;
-pub type TaskResult = Result<(), MCError>;
+pub type TaskResult = Result<(), RARTError>;
 
 pub struct Task {
     id: TaskId,

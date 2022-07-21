@@ -10,6 +10,8 @@ pub mod alloc_rust;
 pub mod alloc_rtos;
 #[cfg(all(not(feature = "std"), feature = "peripherals"))]
 pub mod peripheral;
+#[cfg(not(feature = "std"))]
+pub mod zbus_backend;
 
 #[cfg(all(feature = "alloc_rtos", feature = "alloc_rust"))]
 compile_error!("feature \"alloc_rtos\" and feature \"alloc_rust\" cannot be enabled at the same time");

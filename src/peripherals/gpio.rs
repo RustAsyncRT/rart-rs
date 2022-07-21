@@ -1,5 +1,5 @@
 use core::time::Duration;
-use crate::{delay_secs, Expect, Lazy, MCError, Mutex};
+use crate::{delay_secs, Expect, Lazy, RARTError, Mutex};
 use crate::futures::mutex::MutexGuard;
 use crate::peripherals::{Peripheral, PeripheralKind};
 use heapless::Vec;
@@ -31,28 +31,28 @@ impl Gpio {
         let mut vector: GPIOSTable = Vec::new();
 
         for _ in 0..PORT_NUM {
-            vector.push(Vec::new()).mc_expect("Cannot push port at GPIO Peripheral");
+            vector.push(Vec::new()).rart_expect("Cannot push port at GPIO Peripheral");
         }
 
         for (port, pins) in vector.iter_mut().enumerate() {
             for pin in 0..PIN_NUM {
-                pins.push(Mutex::new(Peripheral::new(Gpio { port: port as u32, pin: pin as u32 }))).mc_expect("Cannot push pin at GPIO Peripheral");
+                pins.push(Mutex::new(Peripheral::new(Gpio { port: port as u32, pin: pin as u32 }))).rart_expect("Cannot push pin at GPIO Peripheral");
             }
         }
 
         GPIOS.init(vector);
     }
 
-    pub async fn new(port: usize, pin: usize) -> Result<MutexGuard<GpioPeripheral, TASK_NUM>, MCError> {
+    pub async fn new(port: usize, pin: usize) -> Result<MutexGuard<GpioPeripheral, TASK_NUM>, RARTError> {
         let gpios = GPIOS.data();
 
         if port >= gpios.len() {
-            return Err(MCError::WrongGPIOPort);
+            return Err(RARTError::WrongGPIOPort);
         }
 
         let pins = gpios.get(port).unwrap();
         if pin >= pins.len() {
-            return Err(MCError::WrongGPIOPin);
+            return Err(RARTError::WrongGPIOPin);
         }
 
         let mut gpio = pins.get(pin).unwrap().lock().await;
