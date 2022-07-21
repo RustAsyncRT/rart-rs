@@ -1,19 +1,31 @@
+#[cfg(feature = "zbus")]
 use core::future::Future;
+#[cfg(feature = "zbus")]
 use core::marker::PhantomData;
+#[cfg(feature = "zbus")]
 use core::pin::Pin;
+#[cfg(feature = "zbus")]
 use core::task::{Context, Poll};
+#[cfg(feature = "zbus")]
 use core::task::Waker;
+#[cfg(feature = "zbus")]
 use crate::common::arc::Arc;
+#[cfg(feature = "zbus")]
 use crate::common::ArcMutex;
+#[cfg(feature = "zbus")]
 use crate::common::blocking_mutex::BlockingMutex;
+#[cfg(feature = "zbus")]
 use crate::{delay_secs, RARTError};
+#[cfg(feature = "zbus")]
 use crate::futures::zbus_backend::{zbus_publish, zbus_register_observer};
 
+#[cfg(feature = "zbus")]
 pub struct ZbusChannel<T: Clone> {
     marker: PhantomData<T>,
     id: u32,
 }
 
+#[cfg(feature = "zbus")]
 impl<T: Clone> ZbusChannel<T> {
     pub fn new(id: u32) -> Self {
         Self {
@@ -42,11 +54,13 @@ impl<T: Clone> ZbusChannel<T> {
     }
 }
 
+#[cfg(feature = "zbus")]
 struct ZbusReceiver<'a, T: Clone> {
     channel: &'a ZbusChannel<T>,
     state: ArcMutex<ZbusState<T>>,
 }
 
+#[cfg(feature = "zbus")]
 pub enum ZbusState<T> {
     None,
     Waiting(Waker),
@@ -54,6 +68,7 @@ pub enum ZbusState<T> {
     Completed(T),
 }
 
+#[cfg(feature = "zbus")]
 impl<'a, T: Clone> ZbusReceiver<'a, T> {
     pub fn new(channel: &'a ZbusChannel<T>) -> Self {
         Self {
@@ -63,6 +78,7 @@ impl<'a, T: Clone> ZbusReceiver<'a, T> {
     }
 }
 
+#[cfg(feature = "zbus")]
 impl<'a, T: Clone> Future for ZbusReceiver<'a, T> {
     type Output = T;
 

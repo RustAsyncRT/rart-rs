@@ -7,7 +7,7 @@ edition = "2018"
 
 [dependencies]
 heapless = "0.7.10"
-rart-rs = { path = "../../../", features = ["alloc_rtos"] }
+rart-rs = { path = "../../../", features = ["alloc_rtos", "zbus"] }
 rart-macros = { path = "../../../src/rart-macros" }
 panic-halt = "0.2.0"
 
