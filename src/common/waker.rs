@@ -50,12 +50,12 @@ fn waker_wake(s: &RARTWaker) {
     let waker_ptr: *const RARTWaker = s;
     // TODO Explain why this is safe
     let waker_arc = unsafe { Arc::from_raw(waker_ptr) };
-    let sender = waker_arc.sender.lock().mc_expect("Cannot get waker queue sender");
-    sender.send(waker_arc.task_id).mc_expect("Cannot get waker queue sender");
+    let sender = waker_arc.sender.lock().rart_expect("Cannot get waker queue sender");
+    sender.send(waker_arc.task_id).rart_expect("Cannot get waker queue sender");
 }
 
 fn waker_wake_by_ref(s: &RARTWaker) {
-    let sender = s.sender.lock().mc_expect("Cannot get waker sender");
+    let sender = s.sender.lock().rart_expect("Cannot get waker sender");
     if let Err(e) = sender.send(s.task_id) {
         #[cfg(not(feature = "std"))]
         log!("waker by ref error: %d", e);

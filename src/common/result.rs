@@ -10,7 +10,7 @@ use std::sync::mpsc::SendError;
 #[cfg(feature = "std")]
 use std::sync::mpsc::RecvError;
 
-pub enum MCError {
+pub enum RARTError {
     Generic,
     MutexPoisonError,
     SendError,
@@ -19,16 +19,17 @@ pub enum MCError {
     Trigger,
     Semaphore,
     Timer,
+    CError(i32),
     WrongGPIOPort,
     WrongGPIOPin,
 }
 
 pub trait Expect<T> {
-    fn mc_expect(self, msg: &str) -> T;
+    fn rart_expect(self, msg: &str) -> T;
 }
 
 impl<T, E> Expect<T> for Result<T, E> {
-    fn mc_expect(self, msg: &str) -> T {
+    fn rart_expect(self, msg: &str) -> T {
         match self {
             Ok(t) => t,
             #[cfg(feature = "std")]
@@ -40,7 +41,7 @@ impl<T, E> Expect<T> for Result<T, E> {
 }
 
 impl<T> Expect<T> for Option<T> {
-    fn mc_expect(self, msg: &str) -> T {
+    fn rart_expect(self, msg: &str) -> T {
         match self {
             Some(t) => t,
             #[cfg(feature = "std")]
@@ -52,29 +53,29 @@ impl<T> Expect<T> for Option<T> {
 }
 
 #[cfg(feature = "std")]
-impl<T> From<PoisonError<T>> for MCError {
+impl<T> From<PoisonError<T>> for RARTError {
     fn from(_: PoisonError<T>) -> Self {
-        MCError::MutexPoisonError
+        RARTError::MutexPoisonError
     }
 }
 
 #[cfg(feature = "std")]
-impl<T> From<SendError<T>> for MCError {
+impl<T> From<SendError<T>> for RARTError {
     fn from(_: SendError<T>) -> Self {
-        MCError::SendError
+        RARTError::SendError
     }
 }
 
 #[cfg(feature = "std")]
-impl From<RecvError> for MCError {
+impl From<RecvError> for RARTError {
     fn from(_: RecvError) -> Self {
-        MCError::RecvError
+        RARTError::RecvError
     }
 }
 
 #[cfg(not(feature = "std"))]
-impl From<i32> for MCError {
+impl From<i32> for RARTError {
     fn from(_: i32) -> Self {
-        MCError::Generic
+        RARTError::Generic
     }
 }

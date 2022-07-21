@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::time::{Duration, Instant};
 use crate::common::ArcMutex;
 use crate::common::lazy::Lazy;
-use crate::common::result::MCError;
+use crate::common::result::RARTError;
 use crate::Expect;
 use crate::futures::time::DelayState;
 use crate::std::blocking_channel::{BlockingChannel, BlockingReceiver};
@@ -14,11 +14,11 @@ pub fn timer_init() {
 
     let receiver = CHANNEL.data().new_receiver();
     std::thread::spawn(move || {
-        timer_thread(receiver).mc_expect("Timer thread error");
+        timer_thread(receiver).rart_expect("Timer thread error");
     });
 }
 
-pub fn timer_new_delay(state: ArcMutex<DelayState>, timeout: u32) -> Result<(), MCError> {
+pub fn timer_new_delay(state: ArcMutex<DelayState>, timeout: u32) -> Result<(), RARTError> {
     let timeout = Instant::now() + Duration::from_secs(timeout as u64);
     let entry = TimerEntry::new(state.clone(), timeout);
 
@@ -29,13 +29,13 @@ pub fn timer_new_delay(state: ArcMutex<DelayState>, timeout: u32) -> Result<(), 
     Ok(())
 }
 
-fn timer_thread(input_queue: ArcMutex<BlockingReceiver<TimerEntry>>) -> Result<(), MCError> {
+fn timer_thread(input_queue: ArcMutex<BlockingReceiver<TimerEntry>>) -> Result<(), RARTError> {
     let mut pending_tasks: Vec<TimerEntry> = vec![];
     let input_queue = input_queue.lock()?;
 
     loop {
         if !pending_tasks.is_empty() {
-            let next_pending_task = pending_tasks.get(0).ok_or(MCError::Timer)?;
+            let next_pending_task = pending_tasks.get(0).ok_or(RARTError::Timer)?;
             if Instant::now() >= next_pending_task.timeout {
                 if let Ok(mut state) = next_pending_task.state.lock() {
                     if let DelayState::Waiting(waker) = &*state {

@@ -8,7 +8,7 @@ use core::task::{Context, Poll};
 use crate::common::arc::Arc;
 use crate::common::ArcMutex;
 use crate::common::blocking_mutex::BlockingMutex;
-use crate::common::result::{Expect, MCError};
+use crate::common::result::{Expect, RARTError};
 
 pub struct SemaphoreUnbounded<const TN: usize> {
     unlocked_count: AtomicUsize,
@@ -31,7 +31,7 @@ impl<const TN: usize> SemaphoreUnbounded<TN> {
         TakerUnbounded { semaphore: &self }.await
     }
 
-    pub fn give(&self) -> Result<(), MCError> {
+    pub fn give(&self) -> Result<(), RARTError> {
         self.unlocked_count.fetch_add(1, Ordering::AcqRel);
         let mut wakers = self.wakers.lock()?;
         if let Some(waker) = wakers.pop_front() {
@@ -50,8 +50,8 @@ impl<const TN: usize> Future for TakerUnbounded<TN> {
             self.semaphore.unlocked_count.fetch_sub(1, Ordering::AcqRel);
             Poll::Ready(())
         } else {
-            let mut wakers = self.semaphore.wakers.lock().mc_expect("Cannot lock wakers at take poll");
-            wakers.push_back(cx.waker().clone()).mc_expect("Cannot store taker unbounded waker");
+            let mut wakers = self.semaphore.wakers.lock().rart_expect("Cannot lock wakers at take poll");
+            wakers.push_back(cx.waker().clone()).rart_expect("Cannot store taker unbounded waker");
             Poll::Pending
         }
     }
@@ -86,7 +86,7 @@ impl<const N: usize, const TN: usize> Semaphore<N, TN> {
         Taker { semaphore: &self }.await
     }
 
-    pub fn give(&self) -> Result<(), MCError> {
+    pub fn give(&self) -> Result<(), RARTError> {
         if self.unlocked_count.load(Ordering::Acquire) < self.max_locks {
             self.unlocked_count.fetch_add(1, Ordering::AcqRel);
             let mut wakers = self.take_wakers.lock()?;
@@ -109,7 +109,7 @@ impl<const N: usize, const TN: usize> Future for Taker<N, TN> {
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         if self.semaphore.unlocked_count.load(Ordering::Acquire) > 0 {
             if self.semaphore.unlocked_count.load(Ordering::Acquire) == self.semaphore.max_locks {
-                let mut give_wakers = self.semaphore.give_wakers.lock().mc_expect("");
+                let mut give_wakers = self.semaphore.give_wakers.lock().rart_expect("");
                 if let Some(waker) = give_wakers.pop_front() {
                     waker.wake_by_ref();
                 }
@@ -117,8 +117,8 @@ impl<const N: usize, const TN: usize> Future for Taker<N, TN> {
             self.semaphore.unlocked_count.fetch_sub(1, Ordering::AcqRel);
             Poll::Ready(())
         } else {
-            let mut take_wakers = self.semaphore.take_wakers.lock().mc_expect("Cannot lock wakers at take poll");
-            take_wakers.push_back(cx.waker().clone()).mc_expect("Cannot store taker waker");
+            let mut take_wakers = self.semaphore.take_wakers.lock().rart_expect("Cannot lock wakers at take poll");
+            take_wakers.push_back(cx.waker().clone()).rart_expect("Cannot store taker waker");
             Poll::Pending
         }
     }
@@ -130,7 +130,7 @@ impl<const N: usize, const TN: usize> Future for Giver<N, TN> {
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         if self.semaphore.unlocked_count.load(Ordering::Acquire) < self.semaphore.max_locks {
             if self.semaphore.unlocked_count.load(Ordering::Acquire) == 0 {
-                let mut take_wakers = self.semaphore.take_wakers.lock().mc_expect("");
+                let mut take_wakers = self.semaphore.take_wakers.lock().rart_expect("");
                 if let Some(waker) = take_wakers.pop_front() {
                     waker.wake_by_ref();
                 }
@@ -138,8 +138,8 @@ impl<const N: usize, const TN: usize> Future for Giver<N, TN> {
             self.semaphore.unlocked_count.fetch_add(1, Ordering::AcqRel);
             Poll::Ready(())
         } else {
-            let mut give_wakers = self.semaphore.give_wakers.lock().mc_expect("Cannot lock wakers at give poll");
-            give_wakers.push_back(cx.waker().clone()).mc_expect("Cannot store giver waker");
+            let mut give_wakers = self.semaphore.give_wakers.lock().rart_expect("Cannot lock wakers at give poll");
+            give_wakers.push_back(cx.waker().clone()).rart_expect("Cannot store giver waker");
             Poll::Pending
         }
     }

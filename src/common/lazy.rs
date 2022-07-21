@@ -32,7 +32,7 @@ impl<T: Sized> Lazy<T> {
         // TODO Explain why this is safe
         unsafe {
             let data_ptr = &*self.data.get();
-            data_ptr.as_ref().mc_expect("Cannot get the data from empty lazy")
+            data_ptr.as_ref().rart_expect("Cannot get the data from empty lazy")
         }
     }
 }

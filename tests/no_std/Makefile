@@ -1,5 +1,5 @@
 all: lib build_sample run
-rebuilt_all: clean lib build_sample run
+rebuild_all: clean lib build_sample run
 
 lib:
 	cd rs_lib/ && cargo build --target thumbv7em-none-eabi --release

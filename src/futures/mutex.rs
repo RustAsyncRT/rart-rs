@@ -48,8 +48,8 @@ impl<T: 'static, const TN: usize> Future for &'static Mutex<T, TN> {
             Poll::Ready(MutexGuard { mutex: *self })
         } else {
             let mut wakers = self.wakers.lock()
-                .mc_expect("Cannot lock mutex wakers");
-            wakers.push_back(cx.waker().clone()).mc_expect("Cannot store mutex waker");
+                .rart_expect("Cannot lock mutex wakers");
+            wakers.push_back(cx.waker().clone()).rart_expect("Cannot store mutex waker");
             Poll::Pending
         }
     }
@@ -61,7 +61,7 @@ impl<T: 'static, const TN: usize> Drop for MutexGuard<T, TN> {
         mutex.unlock();
 
         let mut wakers = mutex.wakers.lock()
-            .mc_expect("Cannot lock mutex wakers");
+            .rart_expect("Cannot lock mutex wakers");
         if let Some(next_waker) = wakers.pop_front() {
             next_waker.wake_by_ref();
         }
