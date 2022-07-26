@@ -1,7 +1,7 @@
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Literal};
 use quote::{quote, TokenStreamExt, ToTokens};
-use syn::{ExprTuple, Item, ItemFn};
+use syn::{ExprParen, ExprTuple, Item, ItemFn};
 
 pub fn entry_parse(args: proc_macro2::TokenStream, item: proc_macro2::TokenStream) -> Ast {
     if !args.is_empty() {
@@ -32,11 +32,15 @@ pub fn entry_analyze(ast: Ast) -> Model {
                 "tasks" => {
                     let attr = attrs.remove(index);
 
-                    if let Ok(tuple) = syn::parse2::<ExprTuple>(attr.tokens) {
+                    if let Ok(tuple) = syn::parse2::<ExprTuple>(attr.clone().tokens) {
                         for elem in tuple.elems {
                             if let Ok(ident) = syn::parse2::<Ident>(elem.to_token_stream()) {
                                 tasks.push(ident);
                             }
+                        }
+                    } else if let Ok(expr) = syn::parse2::<ExprParen>(attr.clone().tokens) {
+                        if let Ok(ident) = syn::parse2::<Ident>(expr.expr.to_token_stream()) {
+                            tasks.push(ident);
                         }
                     }
                 }

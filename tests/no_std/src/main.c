@@ -21,7 +21,7 @@ void pong_task()
         // read
         struct ball_pos recv_msg = {0};
         ZBUS_CHAN_READ(pong, recv_msg, K_NO_WAIT);
-        printk("[c] receive ball pos: <%d, %d>\n", recv_msg.x, recv_msg.y);
+        printk("[c]receive ball pos: <%d, %d>\n", recv_msg.x, recv_msg.y);
 
         // pub
         struct ball_pos send_msg = {.x = 7, .y = 12};
@@ -31,7 +31,7 @@ void pong_task()
 K_THREAD_DEFINE(pong_task_id, 512, pong_task, NULL, NULL, NULL, 3, 0, 0);
 
 void main(void) {
-    printk("Starting RART loop...\n");
-    ping_task();
-    printk("End of RART loop\n");
+    printk("[c]Starting RART loop...\n");
+    main_task();
+    printk("[c]End of RART loop\n");
 }
