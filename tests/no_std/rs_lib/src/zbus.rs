@@ -9,7 +9,6 @@ extern crate alloc;
 
 use rart_rs::*;
 
-// Start Generated
 #[derive(Clone)]
 pub enum ZbusChannelIndex {
     Ping,
@@ -24,7 +23,6 @@ impl Into<u32> for ZbusChannelIndex {
         }
     }
 }
-// End Generated
 
 #[no_mangle]
 static ping_listener: zbus_observer = zbus_observer::new();
@@ -36,7 +34,6 @@ struct BallPos {
     y: u32,
 }
 
-// #[rart_macros::zbus::observers(ping_listener)]
 #[rart_macros::entry]
 async fn ping_task() -> TaskResult {
     let ping_chan = ZbusChannel::new(ZbusChannelIndex::Ping.into());

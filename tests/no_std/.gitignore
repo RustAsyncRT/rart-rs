@@ -4,3 +4,5 @@ build/
 .idea/
 src/generated
 compile_commands.json
+STDOUT
+outputs/
