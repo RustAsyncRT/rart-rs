@@ -20,6 +20,7 @@ pub fn entry_parse(args: proc_macro2::TokenStream, item: proc_macro2::TokenStrea
 pub fn entry_analyze(ast: Ast) -> Model {
     let mut tasks = vec![];
     let mut channels = vec![];
+    let mut triggers = vec![];
 
     let mut item = ast;
 
@@ -43,15 +44,34 @@ pub fn entry_analyze(ast: Ast) -> Model {
                             tasks.push(ident);
                         }
                     }
-                }
+                },
+                "triggers" => {
+                    let attr = attrs.remove(index);
+
+                    if let Ok(tuple) = syn::parse2::<ExprTuple>(attr.clone().tokens) {
+                        for elem in tuple.elems {
+                            if let Ok(ident) = syn::parse2::<Ident>(elem.to_token_stream()) {
+                                triggers.push(ident);
+                            }
+                        }
+                    } else if let Ok(expr) = syn::parse2::<ExprParen>(attr.clone().tokens) {
+                        if let Ok(ident) = syn::parse2::<Ident>(expr.expr.to_token_stream()) {
+                            triggers.push(ident);
+                        }
+                    }
+                },
                 "channels" => {
                     let attr = attrs.remove(index);
 
-                    if let Ok(tuple) = syn::parse2::<ExprTuple>(attr.tokens) {
+                    if let Ok(tuple) = syn::parse2::<ExprTuple>(attr.clone().tokens) {
                         for elem in tuple.elems {
                             if let Ok(ident) = syn::parse2::<Ident>(elem.to_token_stream()) {
                                 channels.push(ident);
                             }
+                        }
+                    } else if let Ok(expr) = syn::parse2::<ExprParen>(attr.clone().tokens) {
+                        if let Ok(ident) = syn::parse2::<Ident>(expr.expr.to_token_stream()) {
+                            channels.push(ident);
                         }
                     }
                 }
@@ -63,9 +83,9 @@ pub fn entry_analyze(ast: Ast) -> Model {
     Model {
         tasks,
         channels,
+        triggers,
         mutexes: vec![],
         semaphores: vec![],
-        triggers: vec![],
         item,
     }
 }
@@ -78,10 +98,15 @@ pub fn entry_codegen(mut model: Model) -> TokenStream {
 
     let mut channels = quote! {};
     for chan in model.channels {
-        let channel_name_upper = Ident::new(&chan.to_string().to_uppercase(), proc_macro2::Span::call_site());
-
         channels.append_all(quote! {
-            #channel_name_upper.init(Channel::new());
+            #chan.init(Channel::new());
+        });
+    }
+
+    let mut triggers = quote! {};
+    for trig in model.triggers {
+        triggers.append_all(quote! {
+            #trig.init(Trigger::new());
         });
     }
 
@@ -112,6 +137,8 @@ pub fn entry_codegen(mut model: Model) -> TokenStream {
         #[no_mangle]
         pub extern "C" fn #old_name() {
             timer_init();
+
+            #triggers
 
             #channels
 
