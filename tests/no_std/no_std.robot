@@ -31,6 +31,18 @@ Test Trigger
     END
     Wait For Line On Uart   [log][tg] Task2 is enabled
 
+Test Mutex
+    Compile No-Std Test     nrf52840dk_nrf52840
+    Setup Renode    nrf52840
+    Wait For Line On Uart   [log][mtx] t1 0 old val: 0 (tm 0)
+    Wait For Line On Uart   [log][mtx] t1 0 new val: 1 (tm 0)
+    Wait For Line On Uart   [log][mtx] t2 0 old val: 1 (tm 2)
+    Wait For Line On Uart   [log][mtx] t2 0 new val: 2 (tm 2)
+    Wait For Line On Uart   [log][mtx] t1 1 old val: 2 (tm 4)
+    Wait For Line On Uart   [log][mtx] t1 1 new val: 3 (tm 4)
+    Wait For Line On Uart   [log][mtx] t2 1 old val: 3 (tm 6)
+    Wait For Line On Uart   [log][mtx] t2 1 new val: 4 (tm 6)
+
 *** Keywords ***
 Setup Renode
     [Arguments]     ${platform}

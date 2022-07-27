@@ -136,6 +136,37 @@ pub fn mutex_def(args: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
+pub fn mutex_pub_def(args: TokenStream) -> TokenStream {
+    let mut values = vec![];
+    for arg in args {
+        if let TokenTree::Ident(ident) = &arg {
+            values.push(ident.to_string());
+        } else if let TokenTree::Literal(lit) = &arg {
+            values.push(lit.to_string());
+        }
+    }
+
+    if values.len() != 2 {
+        panic!("Wrong number of arguments");
+    }
+
+    let name = syn::Ident::new(
+        &values[0],
+        proc_macro2::Span::call_site(),
+    );
+    let ty = syn::Ident::new(
+        &values[1],
+        proc_macro2::Span::call_site(),
+    );
+
+    let rust = quote! {
+        #[allow(non_upper_case_globals)]
+        pub static #name: Lazy<Mutex<#ty, __TASK_NUMBER>> = Lazy::new();
+    };
+    rust.into()
+}
+
+#[proc_macro]
 pub fn mutex(args: TokenStream) -> TokenStream {
     get_lazy_data(args)
 }
@@ -167,6 +198,37 @@ pub fn semaphore_def(args: TokenStream) -> TokenStream {
     let rust = quote! {
         #[allow(non_upper_case_globals)]
         static #name: Lazy<Semaphore<#number, __TASK_NUMBER>> = Lazy::new();
+    };
+    rust.into()
+}
+
+#[proc_macro]
+pub fn semaphore_pub_def(args: TokenStream) -> TokenStream {
+    let mut values = vec![];
+    for arg in args {
+        if let TokenTree::Ident(ident) = &arg {
+            values.push(ident.to_string());
+        } else if let TokenTree::Literal(lit) = &arg {
+            values.push(lit.to_string());
+        }
+    }
+
+    if values.len() != 2 {
+        panic!("Wrong number of arguments");
+    }
+
+    let name = syn::Ident::new(
+        &values[0],
+        proc_macro2::Span::call_site(),
+    );
+    let number = syn::LitInt::new(
+        &values[1],
+        proc_macro2::Span::call_site(),
+    );
+
+    let rust = quote! {
+        #[allow(non_upper_case_globals)]
+        pub static #name: Lazy<Semaphore<#number, __TASK_NUMBER>> = Lazy::new();
     };
     rust.into()
 }

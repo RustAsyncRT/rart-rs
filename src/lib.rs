@@ -2,6 +2,7 @@
 #![feature(core_intrinsics)]
 #![feature(alloc_error_handler)]
 #![feature(once_cell)]
+#![feature(waker_getters)]
 
 extern crate core;
 
