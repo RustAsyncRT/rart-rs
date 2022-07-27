@@ -8,6 +8,7 @@ use crate::common::arc::Arc;
 use crate::common::ArcMutex;
 use crate::common::blocking_mutex::BlockingMutex;
 use crate::common::result::RARTError;
+use crate::Expect;
 
 pub struct Trigger<const TN: usize> {
     wait_wakers: ArcMutex<Deque<Waker, TN>>,
@@ -49,8 +50,10 @@ impl<const TN: usize> Trigger<TN> {
 impl<const TN: usize> Future for Waiter<TN> {
     type Output = ();
 
-    fn poll(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<Self::Output> {
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         if self.trigger.is_triggered.load(Ordering::Acquire) == 0 {
+            let mut wait_wakers = self.trigger.wait_wakers.lock().rart_expect("Cannot lock wait_wakers at trigger poll");
+            wait_wakers.push_back(cx.waker().clone()).rart_expect("Cannot push back the wait waker");
             Poll::Pending
         } else {
             self.trigger.is_triggered.fetch_sub(1, Ordering::AcqRel);

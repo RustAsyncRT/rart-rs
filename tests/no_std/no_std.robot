@@ -21,6 +21,16 @@ Test Ping Pong ZBUS
         Wait For Line On Uart   [log][zbus] ${i}. receive ball pos: <7, 12>
     END
 
+Test Trigger
+    Compile No-Std Test     nrf52840dk_nrf52840
+    Setup Renode    nrf52840
+    Wait For Line On Uart   [log][tg] waiting 3 seconds before enable task2
+    Wait For Line On Uart   [log][tg] waiting the task1 to trigger
+    FOR    ${i}    IN RANGE    1    4
+        Wait For Line On Uart   [log][tg] second ${i}...
+    END
+    Wait For Line On Uart   [log][tg] Task2 is enabled
+
 *** Keywords ***
 Setup Renode
     [Arguments]     ${platform}

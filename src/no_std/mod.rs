@@ -20,6 +20,7 @@ extern "C" {
     #[cfg(not(feature = "std"))]
     pub fn log_fn(format: *const u8, ...);
     #[cfg(not(feature = "std"))]
+    #[allow(dead_code)]
     pub fn trace_fn(file: *const u8, line: u32);
     #[cfg(not(feature = "std"))]
     pub fn timestamp() -> u32;

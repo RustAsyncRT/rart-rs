@@ -19,7 +19,7 @@ fn get_lazy_data(args: TokenStream) -> TokenStream {
     }
 
     let name = syn::Ident::new(
-        &values[0].to_uppercase(),
+        &values[0],
         proc_macro2::Span::call_site(),
     );
 
@@ -45,7 +45,7 @@ pub fn channel_def(args: TokenStream) -> TokenStream {
     }
 
     let name = syn::Ident::new(
-        &values[0].to_uppercase(),
+        &values[0],
         proc_macro2::Span::call_site(),
     );
     let ty = syn::Ident::new(
@@ -58,6 +58,7 @@ pub fn channel_def(args: TokenStream) -> TokenStream {
     );
 
     let rust = quote! {
+        #[allow(non_upper_case_globals)]
         static #name: Lazy<Channel<#ty, #size, __TASK_NUMBER>> = Lazy::new();
     };
     rust.into()
@@ -79,7 +80,7 @@ pub fn channel_pub_def(args: TokenStream) -> TokenStream {
     }
 
     let name = syn::Ident::new(
-        &values[0].to_uppercase(),
+        &values[0],
         proc_macro2::Span::call_site(),
     );
     let ty = syn::Ident::new(
@@ -92,6 +93,7 @@ pub fn channel_pub_def(args: TokenStream) -> TokenStream {
     );
 
     let rust = quote! {
+        #[allow(non_upper_case_globals)]
         pub static #name: Lazy<Channel<#ty, #size, __TASK_NUMBER>> = Lazy::new();
     };
     rust.into()
@@ -118,7 +120,7 @@ pub fn mutex_def(args: TokenStream) -> TokenStream {
     }
 
     let name = syn::Ident::new(
-        &values[0].to_uppercase(),
+        &values[0],
         proc_macro2::Span::call_site(),
     );
     let ty = syn::Ident::new(
@@ -127,6 +129,7 @@ pub fn mutex_def(args: TokenStream) -> TokenStream {
     );
 
     let rust = quote! {
+        #[allow(non_upper_case_globals)]
         static #name: Lazy<Mutex<#ty, __TASK_NUMBER>> = Lazy::new();
     };
     rust.into()
@@ -153,7 +156,7 @@ pub fn semaphore_def(args: TokenStream) -> TokenStream {
     }
 
     let name = syn::Ident::new(
-        &values[0].to_uppercase(),
+        &values[0],
         proc_macro2::Span::call_site(),
     );
     let number = syn::LitInt::new(
@@ -162,6 +165,7 @@ pub fn semaphore_def(args: TokenStream) -> TokenStream {
     );
 
     let rust = quote! {
+        #[allow(non_upper_case_globals)]
         static #name: Lazy<Semaphore<#number, __TASK_NUMBER>> = Lazy::new();
     };
     rust.into()
@@ -188,12 +192,40 @@ pub fn trigger_def(args: TokenStream) -> TokenStream {
     }
 
     let name = syn::Ident::new(
-        &values[0].to_uppercase(),
+        &values[0],
         proc_macro2::Span::call_site(),
     );
 
     let rust = quote! {
+        #[allow(non_upper_case_globals)]
         static #name: Lazy<Trigger<__TASK_NUMBER>> = Lazy::new();
+    };
+    rust.into()
+}
+
+#[proc_macro]
+pub fn trigger_pub_def(args: TokenStream) -> TokenStream {
+    let mut values = vec![];
+    for arg in args {
+        if let TokenTree::Ident(ident) = &arg {
+            values.push(ident.to_string());
+        } else if let TokenTree::Literal(lit) = &arg {
+            values.push(lit.to_string());
+        }
+    }
+
+    if values.len() != 1 {
+        panic!("Wrong number of arguments");
+    }
+
+    let name = syn::Ident::new(
+        &values[0],
+        proc_macro2::Span::call_site(),
+    );
+
+    let rust = quote! {
+        #[allow(non_upper_case_globals)]
+        pub static #name: Lazy<Trigger<__TASK_NUMBER>> = Lazy::new();
     };
     rust.into()
 }

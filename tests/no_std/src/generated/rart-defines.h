@@ -7,7 +7,7 @@
 #ifndef RART_DEFINES_H
 #define RART_DEFINES_H
 
-#define NUM_OF_TASKS 2
+#define NUM_OF_TASKS 4
 
 void main_task(void);
 

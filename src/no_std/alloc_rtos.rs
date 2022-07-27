@@ -1,9 +1,4 @@
 use core::alloc::{GlobalAlloc, Layout};
-use core::cell::UnsafeCell;
-use core::panic::PanicInfo;
-use core::ptr::{null, null_mut};
-use core::sync::atomic::AtomicUsize;
-use core::sync::atomic::Ordering::SeqCst;
 
 #[repr(C, align(256))]
 pub struct MempoolAlloc;
@@ -30,10 +25,8 @@ unsafe impl GlobalAlloc for MempoolAlloc {
 }
 
 #[alloc_error_handler]
-fn alloc_error_handler(layout: Layout) -> ! {
-    unsafe {
-        panic!("allocation error!!!!!\n")
-    }
+fn alloc_error_handler(_layout: Layout) -> ! {
+    panic!("allocation error!!!!!\n")
 }
 
 extern "C" {
