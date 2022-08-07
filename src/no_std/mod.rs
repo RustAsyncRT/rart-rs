@@ -25,6 +25,9 @@ extern "C" {
     #[cfg(not(feature = "std"))]
     pub fn timestamp() -> u32;
     #[cfg(not(feature = "std"))]
+    #[allow(dead_code)]
+    pub fn timestamp_millis() -> u32;
+    #[cfg(not(feature = "std"))]
     pub fn panic(format: *const u8, ...);
 }
 

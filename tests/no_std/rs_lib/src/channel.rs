@@ -1,3 +1,4 @@
+use core::time::Duration;
 use rart_rs::*;
 
 const TASK_NUM: usize = 2;
@@ -10,9 +11,9 @@ channel!(chan, Pkt, 5, TASK_NUM);
 
 
 pub async fn producer_task() -> TaskResult {
-    delay_secs(1).await;
+    delay(Duration::from_secs(1)).await;
     log!("[chan] producer %d", timestamp());
-    delay_secs(1).await;
+    delay(Duration::from_secs(1)).await;
     log!("[chan] producer %d", timestamp());
     chan.send(Pkt { produce_timestamp: unsafe { timestamp() } }).await
 }

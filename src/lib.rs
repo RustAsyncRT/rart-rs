@@ -21,7 +21,7 @@ pub use common::lazy::Lazy;
 pub use common::timer::timer_init;
 
 pub use futures::channel::Channel;
-pub use futures::time::delay_secs;
+pub use futures::time::delay;
 pub use futures::mutex::Mutex;
 pub use futures::trigger::Trigger;
 pub use futures::semaphore::{Semaphore, SemaphoreUnbounded};

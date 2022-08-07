@@ -1,3 +1,4 @@
+use core::time::Duration;
 use rart_rs::*;
 
 const TASK_NUM: usize = 2;
@@ -12,7 +13,7 @@ pub async fn mutex_task1() -> TaskResult {
             *counter += 1;
             log!("[mtx] t1 %d new val: %d (tm %d)", i, *counter, timestamp());
         }
-        delay_secs(2).await;
+        delay(Duration::from_secs(2)).await;
     }
 
     Ok(())
@@ -26,7 +27,7 @@ pub async fn mutex_task2() -> TaskResult {
             *counter += 1;
             log!("[mtx] t2 %d new val: %d (tm %d)", i, *counter, timestamp());
         }
-        delay_secs(2).await;
+        delay(Duration::from_secs(2)).await;
     }
 
     Ok(())
