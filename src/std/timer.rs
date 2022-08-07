@@ -1,5 +1,6 @@
+use core::time::Duration;
 use std::cmp::Ordering;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 use crate::common::ArcMutex;
 use crate::common::lazy::Lazy;
 use crate::common::result::RARTError;
@@ -19,7 +20,7 @@ pub fn timer_init() {
 }
 
 pub fn timer_new_delay(state: ArcMutex<DelayState>, timeout: u32) -> Result<(), RARTError> {
-    let timeout = Instant::now() + Duration::from_secs(timeout as u64);
+    let timeout = Instant::now() + Duration::from_millis(timeout as u64);
     let entry = TimerEntry::new(state.clone(), timeout);
 
     let guard = CHANNEL.data().new_sender();

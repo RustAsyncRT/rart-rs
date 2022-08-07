@@ -9,13 +9,17 @@ use core::task::{Context, Poll};
 #[cfg(feature = "zbus")]
 use core::task::Waker;
 #[cfg(feature = "zbus")]
+use core::time::Duration;
+#[cfg(feature = "zbus")]
 use crate::common::arc::Arc;
 #[cfg(feature = "zbus")]
 use crate::common::ArcMutex;
 #[cfg(feature = "zbus")]
 use crate::common::blocking_mutex::BlockingMutex;
 #[cfg(feature = "zbus")]
-use crate::{delay_secs, RARTError};
+use crate::{RARTError};
+#[cfg(feature = "zbus")]
+use crate::delay;
 #[cfg(feature = "zbus")]
 use crate::futures::zbus_backend::{zbus_publish, zbus_register_observer};
 
@@ -49,7 +53,7 @@ impl<T: Clone> ZbusChannel<T> {
 
     pub async fn publish(&self, data: T) {
         while let Err(_) = self.try_publish(data.clone()) {
-            delay_secs(1).await;
+            delay(Duration::from_secs(1)).await;
         }
     }
 }

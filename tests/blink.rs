@@ -1,3 +1,4 @@
+use std::time::Duration;
 use chrono::Local;
 use rart_rs::*;
 
@@ -12,11 +13,11 @@ async fn blink_task() -> TaskResult
     gpio2.toggle();
     assert_eq!(read_gpio(&gpio2), true);
     assert_eq!(Local::now().timestamp(), now);
-    delay_secs(1).await;
+    delay(Duration::from_secs(1)).await;
     assert_eq!(Local::now().timestamp(), now + 1);
     gpio2.toggle();
     assert_eq!(read_gpio(&gpio2), false);
-    delay_secs(1).await;
+    delay(Duration::from_secs(1)).await;
     assert_eq!(Local::now().timestamp(), now + 2);
 
     Ok(())

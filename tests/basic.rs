@@ -1,5 +1,6 @@
+use std::time::Duration;
 use rart_rs::*;
-use chrono::Local;
+use std::time::Instant;
 
 #[derive(Debug)]
 pub enum BtnState {
@@ -19,14 +20,14 @@ channel_pub!(btn_msgq, BtnState, 10, TASK_NUM);
 channel!(led_msgq, LedState, 5, TASK_NUM);
 
 async fn task1() -> TaskResult {
-    let now = Local::now().timestamp();
-    let times = [now + 10, now + 20];
+    let now = Instant::now();
+    let times = [now.elapsed().as_millis() + 10, now.elapsed().as_millis() + 20];
 
     for _ in 0..1 {
-        delay_secs(10).await;
-        assert_eq!(Local::now().timestamp(), times[0]);
-        delay_secs(10).await;
-        assert_eq!(Local::now().timestamp(), times[1]);
+        delay(Duration::from_millis(10)).await;
+        assert_eq!(now.elapsed().as_millis(), times[0]);
+        delay(Duration::from_millis(10)).await;
+        assert_eq!(now.elapsed().as_millis(), times[1]);
         btn_msgq.send(BtnState::Press).await?;
     }
 
@@ -34,16 +35,20 @@ async fn task1() -> TaskResult {
 }
 
 async fn task2() -> TaskResult {
-    let now = Local::now().timestamp();
-    let times = [now + 20, now + 23, now + 26];
+    let now = Instant::now();
+    let times = [
+        now.elapsed().as_millis() + 20,
+        now.elapsed().as_millis() + 23,
+        now.elapsed().as_millis() + 26
+    ];
 
     for _ in 0..1 {
         let _led_state = led_msgq.recv().await;
-        assert_eq!(Local::now().timestamp(), times[0]);
-        delay_secs(3).await;
-        assert_eq!(Local::now().timestamp(), times[1]);
-        delay_secs(3).await;
-        assert_eq!(Local::now().timestamp(), times[2]);
+        assert_eq!(now.elapsed().as_millis(), times[0]);
+        delay(Duration::from_millis(3)).await;
+        assert_eq!(now.elapsed().as_millis(), times[1]);
+        delay(Duration::from_millis(3)).await;
+        assert_eq!(now.elapsed().as_millis(), times[2]);
     }
 
     Ok(())
@@ -52,12 +57,12 @@ async fn task2() -> TaskResult {
 #[rart_macros::entry]
 #[rart_macros::tasks(task1, task2)]
 async fn main_task() -> TaskResult {
-    let now = Local::now().timestamp();
-    let times = [now + 20];
+    let now = Instant::now();
+    let times = [now.elapsed().as_millis() + 20];
 
     for _ in 0..1 {
         let _btn_state = btn_msgq.recv().await;
-        assert_eq!(Local::now().timestamp(), times[0]);
+        assert_eq!(now.elapsed().as_millis(), times[0]);
 
         led_msgq.send(LedState::On).await?;
     }

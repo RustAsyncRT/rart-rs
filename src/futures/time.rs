@@ -21,7 +21,7 @@ impl Future for DelayFuture {
             match &mut *state {
                 DelayState::None => {
                     *state = DelayState::Waiting(cx.waker().clone());
-                    timer_new_delay(self.state.clone(), self.timeout.as_secs() as u32).rart_expect("Cannot create a new delay");
+                    timer_new_delay(self.state.clone(), self.timeout.as_millis() as u32).rart_expect("Cannot create a new delay");
                     Poll::Pending
                 }
                 DelayState::Waiting(_) => {
@@ -43,9 +43,9 @@ pub enum DelayState {
     Completed,
 }
 
-pub fn delay_secs(secs: u64) -> DelayFuture {
+pub fn delay(duration: Duration) -> DelayFuture {
     DelayFuture {
         state: Arc::new(BlockingMutex::new(DelayState::None)),
-        timeout: Duration::from_secs(secs),
+        timeout: duration,
     }
 }

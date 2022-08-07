@@ -1,5 +1,5 @@
 use core::time::Duration;
-use crate::{delay_secs, Expect, Lazy, RARTError, Mutex};
+use crate::{Expect, Lazy, RARTError, Mutex, delay};
 use crate::futures::mutex::MutexGuard;
 use crate::peripherals::{Peripheral, PeripheralKind};
 use heapless::Vec;
@@ -73,9 +73,9 @@ impl Peripheral<bool, Gpio> {
 
     pub async fn blink(&mut self, period: Duration) {
         self.toggle();
-        delay_secs(period.as_secs()).await;
+        delay(period).await;
         self.toggle();
-        delay_secs(period.as_secs()).await;
+        delay(period).await;
     }
 
     pub async fn n_blink(&mut self, period: Duration, amount: usize) {
