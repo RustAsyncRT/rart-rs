@@ -18,6 +18,7 @@ use crate::common::ArcMutex;
 use crate::common::blocking_mutex::BlockingMutex;
 #[cfg(feature = "zbus")]
 use crate::{RARTError};
+#[cfg(feature = "zbus")]
 use crate::delay;
 #[cfg(feature = "zbus")]
 use crate::futures::zbus_backend::{zbus_publish, zbus_register_observer};
