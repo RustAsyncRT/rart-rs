@@ -2,4 +2,4 @@
 Cargo.lock
 **/*.rs.bk
 .idea/
-tests/std/outputs
+tests/outputs

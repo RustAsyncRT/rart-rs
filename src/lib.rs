@@ -29,6 +29,7 @@ pub use futures::semaphore::{Semaphore, SemaphoreUnbounded};
 #[macro_export]
 macro_rules! trigger {
     ($name:ident, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
         static $name: Lazy<Trigger<$task_num>> = Lazy::new_with_init(|| {
             Trigger::new()
         });
@@ -38,6 +39,7 @@ macro_rules! trigger {
 #[macro_export]
 macro_rules! trigger_pub {
     ($name:ident, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
         pub static $name: Lazy<Trigger<$task_num>> = Lazy::new_with_init(|| {
             Trigger::new()
         });
@@ -47,6 +49,7 @@ macro_rules! trigger_pub {
 #[macro_export]
 macro_rules! mutex {
     ($name:ident, $val_type:ty, $init_val:expr, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
         static $name: Lazy<Mutex<$val_type, $task_num>> = Lazy::new_with_init(|| {
             Mutex::new($init_val)
         });
@@ -56,6 +59,7 @@ macro_rules! mutex {
 #[macro_export]
 macro_rules! mutex_pub {
     ($name:ident, $val_type:ty, $init_val:expr, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
         pub static $name: Lazy<Mutex<$val_type, $task_num>> = Lazy::new_with_init(|| {
             Mutex::new($init_val)
         });
@@ -63,8 +67,29 @@ macro_rules! mutex_pub {
 }
 
 #[macro_export]
+macro_rules! semaphore {
+    ($name:ident, $init_count:expr, $total_count:expr, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
+        static $name: Lazy<Semaphore<$total_count, $task_num>> = Lazy::new_with_init(|| {
+            Semaphore::new($init_count)
+        });
+    };
+}
+
+#[macro_export]
+macro_rules! semaphore_pub {
+    ($name:ident, $init_count:expr, $total_count:expr, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
+        pub static $name: Lazy<Semaphore<$total_count, $task_num>> = Lazy::new_with_init(|| {
+            Semaphore::new($init_count)
+        });
+    };
+}
+
+#[macro_export]
 macro_rules! channel {
     ($name:ident, $val_type:ty, $num_of_itens:expr, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
         static $name: Lazy<Channel<$val_type, $num_of_itens, $task_num>> = Lazy::new_with_init(|| {
             Channel::new()
         });
@@ -74,6 +99,7 @@ macro_rules! channel {
 #[macro_export]
 macro_rules! channel_pub {
     ($name:ident, $val_type:ty, $num_of_itens:expr, $task_num:expr) => {
+        #[allow(non_upper_case_globals)]
         pub static $name: Lazy<Channel<$val_type, $num_of_itens, $task_num>> = Lazy::new_with_init(|| {
             Channel::new()
         });
