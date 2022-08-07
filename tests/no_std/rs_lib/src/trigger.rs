@@ -6,10 +6,10 @@ const TASK_NUM: usize = 2;
 trigger!(enable_t2, TASK_NUM);
 
 pub async fn trigger_task1() -> TaskResult {
-    log!("[tg] waiting 3 seconds before enable task2");
-    for i in 0..3 {
-        delay(Duration::from_secs(1)).await;
-        log!("[tg] second %d...", i+1);
+    log!("[tg] waiting 3 milliseconds before enable task2");
+    for _ in 0..3 {
+        delay(Duration::from_millis(1)).await;
+        log!("[tg] millisecond %d ...", timestamp_millis());
     }
 
     enable_t2.trigger()

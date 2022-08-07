@@ -24,10 +24,10 @@ Test Ping Pong ZBUS
 Test Trigger
     Compile No-Std Test     nrf52840dk_nrf52840
     Setup Renode    nrf52840
-    Wait For Line On Uart   [log][tg] waiting 3 seconds before enable task2
+    Wait For Line On Uart   [log][tg] waiting 3 milliseconds before enable task2
     Wait For Line On Uart   [log][tg] waiting the task1 to trigger
     FOR    ${i}    IN RANGE    1    4
-        Wait For Line On Uart   [log][tg] second ${i}...
+        Wait For Line On Uart   [log][tg] millisecond ${i} ...
     END
     Wait For Line On Uart   [log][tg] Task2 is enabled
 
@@ -58,11 +58,11 @@ Test Semaphore
     Wait For Line On Uart   [log][sem] task1 trying to take the resource at 0 ...
     Wait For Line On Uart   [log][sem] task1 took the resource and exit at 0
     Wait For Line On Uart   [log][sem] task2 trying to take the resource at 0 ...
-    Wait For Line On Uart   [log][sem] task3 will wait 2 seconds to give the resource. Now is 0
-    Wait For Line On Uart   [log][sem] task3 giving the resource at 2 ...
-    Wait For Line On Uart   [log][sem] task2 took the resource at 2
-    Wait For Line On Uart   [log][sem] task2 is giving the resource at 3 ...
-    Wait For Line On Uart   [log][sem] task2 give the resource at 3
+    Wait For Line On Uart   [log][sem] task3 will wait 2 seconds to give the resource. Now is 1
+    Wait For Line On Uart   [log][sem] task3 giving the resource at 3 ...
+    Wait For Line On Uart   [log][sem] task2 took the resource at 3
+    Wait For Line On Uart   [log][sem] task2 is giving the resource at 4 ...
+    Wait For Line On Uart   [log][sem] task2 give the resource at 4
 
 *** Keywords ***
 Setup Renode

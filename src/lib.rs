@@ -113,7 +113,7 @@ pub use no_std::zbus_backend::zbus_observer;
 
 pub use common::result::{Expect, RARTError};
 #[cfg(not(feature = "std"))]
-pub use no_std::{log_fn, timestamp};
+pub use no_std::{log_fn, timestamp, timestamp_millis};
 #[cfg(not(feature = "std"))]
 pub use const_format::formatcp;
 
