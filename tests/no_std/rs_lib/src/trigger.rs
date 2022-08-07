@@ -1,14 +1,8 @@
 use rart_rs::*;
-use rart_macros::trigger;
-use crate::enable_t2;
 
-pub async fn trigger_task2() -> TaskResult {
-    log!("[tg] waiting the task1 to trigger");
-    trigger!(enable_t2).wait().await;
-    log!("[tg] Task2 is enabled");
+const TASK_NUM: usize = 2;
 
-    Ok(())
-}
+trigger!(enable_t2, TASK_NUM);
 
 pub async fn trigger_task1() -> TaskResult {
     log!("[tg] waiting 3 seconds before enable task2");
@@ -17,5 +11,13 @@ pub async fn trigger_task1() -> TaskResult {
         log!("[tg] second %d...", i+1);
     }
 
-    trigger!(enable_t2).trigger()
+    enable_t2.trigger()
+}
+
+pub async fn trigger_task2() -> TaskResult {
+    log!("[tg] waiting the task1 to trigger");
+    enable_t2.wait().await;
+    log!("[tg] Task2 is enabled");
+
+    Ok(())
 }

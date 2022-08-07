@@ -24,6 +24,10 @@ impl RARTWaker {
             sender,
         }
     }
+
+    pub fn id(&self) -> TaskId {
+        return self.task_id
+    }
 }
 
 // TODO Explain why this is safe
@@ -68,4 +72,14 @@ pub fn rart_waker_into_waker(s: *const RARTWaker) -> Waker {
     let raw_waker = RawWaker::new(s as *const (), &VTABLE);
     // TODO Explain why this is safe
     unsafe { Waker::from_raw(raw_waker) }
+}
+
+pub fn waker_into_rart_waker(waker: Waker) -> Arc<RARTWaker> {
+    let raw_waker = waker.as_raw();
+    let arc_ptr = raw_waker.data();
+    let arc_rart_waker_ptr = arc_ptr as *const RARTWaker;
+    // TODO Explain why this is safe
+    let arc = unsafe { Arc::from_raw(arc_rart_waker_ptr) };
+    core::mem::forget(arc.clone());
+    arc
 }
