@@ -19,6 +19,19 @@ impl<T: Sized, const N: usize, const TN: usize> Channel<T, N, TN> {
         }
     }
 
+    pub fn clear(&self) {
+        let mut queue = self.queue.lock().unwrap();
+        for _ in 0..queue.len() {
+            let _ = self.sem.give();
+        }
+        queue.clear();
+    }
+
+    pub fn len(&self) -> usize {
+        let queue = self.queue.lock().unwrap();
+        queue.len()
+    }
+
     pub async fn send(&'static self, data: T) -> Result<(), RARTError> {
         self.sem.wait_give().await;
         let mut queue = self.queue.lock()?;

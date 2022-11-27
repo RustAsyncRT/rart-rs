@@ -132,8 +132,6 @@ pub fn entry_codegen(mut model: Model) -> TokenStream {
     let model_item = model.item;
 
     let code = quote! {
-        pub const __TASK_NUMBER: usize = #tasks_amount;
-
         #[no_mangle]
         pub extern "C" fn #old_name() {
             timer_init();

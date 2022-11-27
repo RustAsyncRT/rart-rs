@@ -14,6 +14,7 @@ mod peripherals;
 mod std;
 #[cfg(not(feature = "std"))]
 mod no_std;
+mod zbus;
 
 pub use common::task::{Task, TaskResult};
 pub use common::executor::Executor;
@@ -106,11 +107,6 @@ macro_rules! channel_pub {
     };
 }
 
-#[cfg(feature = "zbus")]
-pub use futures::zbus::ZbusChannel;
-#[cfg(all(not(feature = "std"), feature = "zbus"))]
-pub use no_std::zbus_backend::zbus_observer;
-
 pub use common::result::{Expect, RARTError};
 #[cfg(not(feature = "std"))]
 pub use no_std::{log_fn, timestamp, timestamp_millis};
@@ -121,3 +117,7 @@ pub use const_format::formatcp;
 pub use peripherals::{Peripheral, gpio::Gpio};
 #[cfg(all(feature = "std", feature = "peripherals"))]
 pub use crate::std::peripheral::read_gpio;
+
+pub use zbus::error::ZbusError;
+pub use zbus::channel::ZbusChannel;
+pub use zbus::observers::{ZBusListener, ZBusSubscriber};
